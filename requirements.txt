@@ -1,0 +1,11 @@
+streamlit
+pdfplumber
+python-docx
+scikit-learn
+sentence-transformers
+plotly
+pandas
+streamlit-option-menu
+google-generativeai
+reportlab
+torch
