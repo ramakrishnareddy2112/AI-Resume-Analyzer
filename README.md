@@ -1,190 +1,117 @@
-# 🚀 AI Resume Analyzer
+# 🤖 AI Resume Analyzer
 
-## 🌍 Live Demo
-🔗 https://ai-resume-analyzer-wvgqjxnf3mzf4zes5irkrw.streamlit.app/
+An advanced AI-powered ATS Resume Analyzer built using Streamlit, NLP, Sentence Transformers, Semantic AI Matching, and Gemini AI.
 
----
-
-## 📌 Overview
-
-AI Resume Analyzer is an advanced ATS-based resume screening platform built using NLP, Machine Learning, Semantic AI Matching, and Gemini AI.
-
-The system analyzes resumes against job descriptions and provides:
-
-- ATS compatibility score
-- Semantic similarity analysis
-- Recruiter-style insights
-- Missing keyword detection
-- Resume improvement suggestions
-- AI-generated resume feedback
-- Downloadable ATS PDF reports
-
-This project simulates how modern corporate ATS systems evaluate resumes during hiring.
+This project simulates how modern Applicant Tracking Systems (ATS) evaluate resumes against job descriptions using keyword analysis, semantic similarity, recruiter-style insights, and AI-generated recommendations.
 
 ---
 
-# ✨ Features
+# 🚀 Features
 
-## 📄 Resume Processing
-- Upload resumes in:
-  - PDF
-  - DOCX
-  - TXT
-- Resume text extraction
-- Persistent session handling
-- Resume replace/re-upload system
+## ✅ ATS Resume Scoring
+- Calculates ATS compatibility score
+- Evaluates keyword relevance
+- Measures semantic similarity using AI embeddings
 
----
+## 🧠 Semantic AI Matching
+- Uses Sentence Transformers for contextual resume-job matching
+- Goes beyond traditional keyword checking
 
-## 🎯 ATS Scoring Engine
-- Keyword matching
-- Semantic similarity scoring
-- Achievement analysis
-- Formatting score
-- Recruiter recommendation prediction
+## 📄 Multi-Format Resume Upload
+Supports:
+- PDF
+- DOCX
+- TXT
 
----
+## 📊 Interactive Analytics Dashboard
+- ATS score visualization
+- Skill match distribution
+- Score breakdown charts
+- Recruiter analytics
 
-## 🧠 AI & NLP Features
-- Sentence Transformer embeddings
-- Semantic AI matching
-- Skill extraction engine
-- Missing skill detection
-- Gemini AI resume coaching
+## 💡 Recruiter Insights
+- Recruiter decision prediction
+- Resume strengths analysis
+- Missing skills analysis
+- Resume improvement recommendations
 
----
-
-## 📊 Interactive Dashboard
-- ATS Gauge Score
-- Skill Match Distribution
-- ATS Breakdown Charts
-- Recruiter Insights
-- Resume Analytics
-
----
-
-## 🤖 Gemini AI Resume Coach
+## ✨ Gemini AI Resume Coach
 Generates:
-- Resume strengths
-- Weaknesses
+- Resume review
+- Strengths & weaknesses
 - Missing keywords
 - ATS optimization suggestions
 - Improved professional summary
 - Improved project bullet points
 - Final recruiter advice
 
----
-
-## 📥 PDF Report Generation
-Download a professional ATS analysis report including:
+## 📥 PDF ATS Report Generation
+Download professional ATS analysis reports including:
 - ATS score
-- Skills analysis
-- Recruiter decision
+- Skill analysis
+- Recruiter insights
 - Gemini AI feedback
-- Resume insights
+
+## 🔄 Persistent Resume Session
+- Upload once
+- Navigate across tabs without losing data
+- Remove and upload new resume anytime
 
 ---
 
 # 🛠️ Tech Stack
 
-| Technology | Usage |
+| Technology | Purpose |
 |---|---|
-| Python | Core Backend |
-| Streamlit | Web Application |
-| Scikit-learn | ATS Similarity Scoring |
-| Sentence Transformers | Semantic Matching |
-| Gemini AI | Resume Feedback |
+| Python | Core Programming |
+| Streamlit | Web Application Framework |
+| Sentence Transformers | Semantic AI Matching |
+| Scikit-learn | NLP & Similarity |
 | Plotly | Interactive Charts |
-| ReportLab | PDF Generation |
-| Pandas | Data Processing |
-| NLP | Skill Extraction |
-
----
-
-# 📸 Screenshots
-
-## 🖥️ Analyzer Page
-(Add screenshot here)
-
----
-
-## 📊 Dashboard
-(Add screenshot here)
-
----
-
-## 🤖 Gemini AI Feedback
-(Add screenshot here)
-
----
-
-# ⚙️ Installation
-
-## Clone Repository
-
-```bash
-git clone https://github.com/ramakrishnareddy2112/AI-Resume-Analyzer.git
-```
-
----
-
-## Move Into Project Folder
-
-```bash
-cd AI-Resume-Analyzer
-```
-
----
-
-## Install Requirements
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Run Application
-
-```bash
-streamlit run app/app.py
-```
-
----
-
-# 🔑 Gemini API Setup
-
-Create:
-
-```text
-.streamlit/secrets.toml
-```
-
-Add:
-
-```toml
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-```
+| Gemini AI | AI Resume Feedback |
+| ReportLab | PDF Report Generation |
+| Pandas | Data Handling |
+| pdfplumber | PDF Resume Parsing |
+| python-docx | DOCX Resume Parsing |
 
 ---
 
 # 📂 Project Structure
 
-```text
-AI-Resume-Analyzer/
-│
-├── app/
-│   └── app.py
-│
-├── dataset/
-│
-├── .streamlit/
-│   └── secrets.toml
-│
-├── requirements.txt
-├── README.md
-└── .gitignore
-```
+```bash
+# 📸 Project Screenshots
+
+## 🏠 Main Analyzer Interface
+
+![Analyzer 1](screenshots/Analyzer%201.png)
+
+![Analyzer 2](screenshots/Analyzer%202.png)
+
+![Analyzer 3](screenshots/Analyzer%203.png)
+
+---
+
+## 📊 ATS Dashboard
+
+![Dashboard 1](screenshots/Dashboard%201.png)
+
+![Dashboard 2](screenshots/Dashboard%202.png)
+
+---
+
+## 💡 Recruiter Insights
+
+![Insights](screenshots/insights.png)
+
+---
+
+## ✨ Gemini AI Feedback
+
+![Gemini 1](screenshots/Gemini%201.png)
+
+![Gemini 2](screenshots/Gemini%202.png)
+
+![Gemini 3](screenshots/Gemini%203.png)
 
 ---
 
@@ -192,27 +119,41 @@ AI-Resume-Analyzer/
 
 - User Authentication
 - Resume History Tracking
-- Multi-Role Resume Optimization
 - AI Resume Builder
 - Job Recommendation System
-- Cloud Database Integration
-- Resume Ranking System
+- Resume Role Classification
+- Vector Database Integration
+- Multi-Resume Comparison
+- Cloud Database Storage
+
+---
+
+# 📈 Learning Outcomes
+
+This project demonstrates:
+- NLP
+- Semantic Similarity
+- AI Integration
+- Streamlit Development
+- Data Visualization
+- Resume Parsing
+- ATS System Simulation
+- Generative AI Integration
+- PDF Report Automation
 
 ---
 
 # 👨‍💻 Author
 
-### Rama Krishna Reddy
+## Pothamsetti Venkata Rama Krishna Reddy
 
-- GitHub:
-  https://github.com/ramakrishnareddy2112
+Data Science & AI Enthusiast
+
+GitHub:
+https://github.com/ramakrishnareddy2112
 
 ---
 
 # ⭐ Support
 
-If you liked this project:
-
-⭐ Star the repository  
-🚀 Share the project  
-💼 Add it to your portfolio
+If you like this project, give this repository a ⭐ on GitHub.
