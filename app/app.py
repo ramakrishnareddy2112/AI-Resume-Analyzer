@@ -3,8 +3,8 @@ import pdfplumber
 from docx import Document
 import re
 import os
-import tomllib
-import google.generativeai as genai
+from xml.sax.saxutils import escape
+from google import genai
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
@@ -67,60 +67,36 @@ def load_model():
 model = load_model()
 
 
+# ---------------------------------------------------------------------------
+# Gemini (google-genai SDK)
+# ---------------------------------------------------------------------------
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
+
+
 def get_gemini_api_key():
+    """Read the key from Streamlit secrets, falling back to an environment variable."""
     try:
         return st.secrets["GEMINI_API_KEY"]
     except Exception:
-        secrets_path = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
-            ".streamlit",
-            "secrets.toml"
-        )
-
-        if os.path.exists(secrets_path):
-            with open(secrets_path, "rb") as f:
-                secrets = tomllib.load(f)
-                return secrets.get("GEMINI_API_KEY")
-
-    return None
+        return os.environ.get("GEMINI_API_KEY")
 
 
-def get_working_gemini_model():
-    available_models = []
-
+def get_gemini_model_name():
+    """Model name can be overridden with GEMINI_MODEL in Streamlit secrets."""
     try:
-        for m in genai.list_models():
-            if "generateContent" in m.supported_generation_methods:
-                available_models.append(m.name)
+        return st.secrets["GEMINI_MODEL"]
     except Exception:
-        pass
-
-    preferred_keywords = ["flash", "pro", "gemini"]
-
-    for keyword in preferred_keywords:
-        for model_name in available_models:
-            if keyword in model_name.lower():
-                return genai.GenerativeModel(model_name)
-
-    if available_models:
-        return genai.GenerativeModel(available_models[0])
-
-    return None
+        return os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
 
 
 def generate_gemini_feedback(resume_text, job_description, missing_skills, match_score):
     api_key = get_gemini_api_key()
 
     if not api_key:
-        return "Gemini API key not found. Please check `.streamlit/secrets.toml`."
+        return "Gemini API key not found. Add GEMINI_API_KEY in Streamlit Secrets (Manage app > Settings > Secrets)."
 
     try:
-        genai.configure(api_key=api_key)
-
-        gemini_model = get_working_gemini_model()
-
-        if gemini_model is None:
-            return "No Gemini model supporting generateContent was found for this API key."
+        client = genai.Client(api_key=api_key)
 
         prompt = f"""
 You are a professional ATS resume reviewer and career coach.
@@ -152,8 +128,11 @@ Give output strictly in this format:
 Keep it practical, professional, and useful for a student applying for internships.
 """
 
-        response = gemini_model.generate_content(prompt)
-        return response.text
+        response = client.models.generate_content(
+            model=get_gemini_model_name(),
+            contents=prompt,
+        )
+        return response.text or "Gemini returned an empty response. Please try again."
 
     except Exception as e:
         return f"Gemini AI error: {e}"
@@ -217,7 +196,7 @@ def render_gemini_cards(feedback_text):
                 f"""
                 <div class='gemini-card'>
                     <h3>{icons.get(title, "✨")} {title}</h3>
-                    <p>{content.strip()}</p>
+                    <p>{escape(content.strip())}</p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -283,14 +262,6 @@ st.markdown("""
 
 .skill-card {
     background: linear-gradient(135deg,#2563eb,#06b6d4);
-    padding: 10px;
-    border-radius: 12px;
-    color: white;
-    text-align: center;
-    margin-bottom: 10px;
-    font-weight: 800;
-    .skill-card {
-        background: linear-gradient(135deg,#2563eb,#06b6d4);
     padding: 10px;
     border-radius: 12px;
     color: white;
@@ -575,13 +546,14 @@ def generate_pdf_report():
     for heading, content in sections.items():
         elements.append(Paragraph(f"<b>{heading}</b>", styles["Heading2"]))
         elements.append(Spacer(1, 6))
-        elements.append(Paragraph(str(content), styles["BodyText"]))
+        # escape() prevents characters like & and < from breaking ReportLab's parser
+        elements.append(Paragraph(escape(str(content)), styles["BodyText"]))
         elements.append(Spacer(1, 14))
 
     if st.session_state["gemini_feedback"]:
         elements.append(Paragraph("<b>Gemini AI Feedback</b>", styles["Heading2"]))
         elements.append(Spacer(1, 6))
-        safe_text = st.session_state["gemini_feedback"].replace("\n", "<br/>")
+        safe_text = escape(st.session_state["gemini_feedback"]).replace("\n", "<br/>")
         elements.append(Paragraph(safe_text, styles["BodyText"]))
 
     doc.build(elements)
@@ -630,7 +602,7 @@ def show_analysis_results():
     st.markdown(
         f"""
         <div class='status-box'>
-            <b>Current Resume:</b> {st.session_state["resume_file_name"]}<br>
+            <b>Current Resume:</b> {escape(st.session_state["resume_file_name"])}<br>
             <b>Status:</b> Analysis available across Dashboard, Insights, and Gemini AI tabs
         </div>
         """,
@@ -733,7 +705,7 @@ if selected == "Analyzer":
         st.markdown(
             f"""
             <div class='status-box'>
-                <b>Current Resume Loaded:</b> {st.session_state["resume_file_name"]}<br>
+                <b>Current Resume Loaded:</b> {escape(st.session_state["resume_file_name"])}<br>
                 You can view Dashboard, Insights, and Gemini AI without uploading again.
             </div>
             """,
@@ -753,10 +725,11 @@ if selected == "Analyzer":
     st.markdown("## 💼 Paste Job Description")
 
     job_description = st.text_area(
-        "",
+        "Job description",
         height=220,
         placeholder="Paste company job description here, then click Analyze Resume below...",
-        key="jd_input"
+        key="jd_input",
+        label_visibility="collapsed"
     )
 
     analyze_button = st.button("🚀 Analyze Resume")
@@ -912,7 +885,7 @@ elif selected == "Gemini AI":
         st.markdown(
             f"""
             <div class='status-box'>
-                <b>Current Resume:</b> {st.session_state["resume_file_name"]}<br>
+                <b>Current Resume:</b> {escape(st.session_state["resume_file_name"])}<br>
                 Gemini will use the saved resume and job description from your analysis.
             </div>
             """,
